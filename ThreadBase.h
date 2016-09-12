@@ -1,22 +1,21 @@
 //============================================================================
-// Name        : ThreadBase.h
-// Author      : Trung
-// Version     : 0.01.2016.0910.2255
-// Copyright   :
-// Description : A wrapper class of POSIX's thread
-// Note		   : User should derive this class and/or override methods for specific tasks
-// Usage	   : Header library
-//				 Compile with -pthread and link with -lpthread.a
+// Name        	: ThreadBase.h
+// Author      	: Trung
+// Version     	: 0.01.2016.0910.2255
+// Copyright   	:
+// Description 	: A wrapper class of POSIX's thread
+// Note		: User should derive this class and/or override methods for specific tasks
+// Usage	: Header library; compile with -pthread and link -lpthread.a
 //
 //============================================================================
 #ifndef THREADBASE_H_
 #define THREADBASE_H_
 
-#include <semaphore.h>
 #include <pthread.h>
-#include <iostream>
 #include <unistd.h>
-#include <string.h>
+#include <semaphore.h>
+#include <iostream>
+#include <cstring>
 
 class Semaphore {
 protected:
@@ -55,7 +54,7 @@ private:
 	enum THREAD_FLAGS {
 		THREAD_RUN		=	0,
 		THREAD_STOP		=	1,
-		THREAD_PAUSE	=	2
+		THREAD_PAUSE		=	2
 	};
 	/*	Description		- Handle the POSIX thread object.
 	 */
@@ -119,6 +118,7 @@ public:
 				std::cerr << "BaseThread: failed to Start." << std::endl;
 				return false;
 			}
+			//Give it a name 
 			strcpy(m_ThreadName,thread_name);
 			m_ThreadControl		= THREAD_RUN;
 			return true;
@@ -184,9 +184,9 @@ public:
 		return m_ThreadStatus;
 	}
 	/*	Description		- Called from outside for waiting the thread to run. Timeout in milisecond
-	 *  Note			- The default timeout is: 0 (INFINITY).
-	 *		  			- If the timeout is set, should call GetThreadStatus() to make sure thread is running.
-	 * 					- Overriding is NOT encouraging.
+	 *  	Note			- The default timeout is: 0 (INFINITY).
+	 *		  		- If the timeout is set, should call GetThreadStatus() to make sure thread is running.
+	 * 				- Overriding is NOT encouraging.
 	 *		return nothing.
 	 */
 	void WaitThreadReady(int iTimeOut = 0) {
